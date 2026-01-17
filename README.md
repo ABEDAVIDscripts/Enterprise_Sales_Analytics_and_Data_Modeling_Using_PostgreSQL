@@ -452,7 +452,9 @@ The database was designed around clear structure, enforced rules, and explicit r
 
 ### Entity Relationship Diagram (ERD)
 An Entity Relationship Diagram (ERD) was created to validate and communicate the logical model. <br>
-The following entities form the foundation of the core schema : *customers, country, channels, products, sales, salesitems, campaigns, stock*. <br>
+The following entities form the foundation of the core schema : *customers, country, channels, products, sales, salesitems, campaigns, stock*. 
+
+<br>
 
 **Diagram** <br>
 <img height="400" alt="er diagram" src="https://github.com/user-attachments/assets/68c5d42f-baef-41d9-a505-877eb0209fed" />
@@ -468,26 +470,26 @@ The following entities form the foundation of the core schema : *customers, coun
 
 <br>
 
-### Core Schema Implementation nd Data Loading
+### Core Schema Implementation and Data Loading
 
-- Create core shema
+#### 1. Create core shema
 ```sql
 CREATE SCHEMA core;
 ```
 
 <br>
 
-- Create Core Tables
+#### 2. Create Core Tables
 
 ```sql
--- 1. countries (reference table)
+-- i. countries (reference table)
 CREATE TABLE core.countries (
     country_id SERIAL PRIMARY KEY,
     country_name TEXT NOT NULL UNIQUE
 ); 
 
 
---2. channels (reference table)
+-- ii. channels (reference table)
 CREATE TABLE core.channels (
     channel_id SERIAL PRIMARY KEY,
     channel_name TEXT NOT NULL UNIQUE,
@@ -495,7 +497,7 @@ CREATE TABLE core.channels (
 );
 
 
---3. customers
+--iii. customers
 CREATE TABLE core.customers (
     customer_id INTEGER PRIMARY KEY,
     country_id INTEGER NOT NULL,
@@ -508,7 +510,7 @@ CREATE TABLE core.customers (
 );
 
 
--- 4. products
+-- iv. products
 CREATE TABLE core.products (
     product_id INTEGER PRIMARY KEY,
     product_name TEXT NOT NULL,
@@ -522,7 +524,7 @@ CREATE TABLE core.products (
 );
 
 
--- 5. sales 
+-- v. sales 
 CREATE TABLE core.sales (
     sale_id INTEGER PRIMARY KEY,
     customer_id INTEGER NOT NULL,
@@ -546,7 +548,7 @@ CREATE TABLE core.sales (
 );
 
 
--- 6. salesitems
+-- vi. salesitems
 CREATE TABLE core.salesitems (
     item_id INTEGER PRIMARY KEY,
     sale_id INTEGER NOT NULL,
@@ -566,7 +568,7 @@ CREATE TABLE core.salesitems (
 );
 
 
--- 7. stock
+-- vii. stock
 CREATE TABLE core.stock(
 	country_id INT NOT NULL,
 	product_id INT NOT NULL,
@@ -584,7 +586,7 @@ CONSTRAINT fk_stock_products
 );
 
 
--- 8. campaigns
+-- viii. campaigns
 CREATE TABLE core.campaigns (
 	campaign_id INT PRIMARY KEY,
 	campaign_name TEXT,
@@ -606,37 +608,59 @@ CONSTRAINT chk_campaign_dates
 <br>
 <br>
 
-- Load Data Into Core Tables
+#### 3. Load Data Into Core Tables:
+- Load country
+<img height="250" alt="core country" src="https://github.com/user-attachments/assets/9a9a66cf-40c5-4a0f-9aa1-4a3d19f0cc40" />
+
 ```SQL
--- 1. load country
 INSERT INTO core.country (country_name)
 SELECT DISTINCT country
 FROM staging.customers
 WHERE country IS NOT NULL;
+```
 
+<br>
 
--- 2. load channel
+- Load channel
+<img height="250" alt="core channels" src="https://github.com/user-attachments/assets/52b0e5c8-c932-4156-bada-f60e49d02785" />
+
+```sql
 INSERT INTO core.channels (channel_name, description)
 SELECT DISTINCT channel, description
 FROM staging.channels;
+```
 
+<br>
 
--- 3. load customers
+- Load customers
+<img height="250" alt="core customers" src="https://github.com/user-attachments/assets/d1e0462d-b810-455f-9349-9fa2be75c3ad" />
+
+```sql
 INSERT INTO core.customers (customer_id, country_id, age_range, signup_date)
 SELECT 
 	c.customer_id, co.country_id, c.age_range, c.signup_date::DATE
 FROM staging.customers c
 JOIN core.country co
 ON c.country = co.country_name;
+```
 
+<br>
 
--- 4. Load products
+- Load products
+<img height="250" alt="core products" src="https://github.com/user-attachments/assets/857c1fb0-f1c9-426b-a077-921962214159" />
+
+```sql
 INSERT INTO core.products
 SELECT * 
 FROM staging.products;
+```
 
+<br>
 
--- 5. Load Sales
+- Load Sales
+<img height="250" alt="core sales" src="https://github.com/user-attachments/assets/284732d4-edc5-4384-92b6-fd49bb233a20" />
+
+```sql
 INSERT INTO core.sales 
 	(sale_id, customer_id, channel_id, country_id, sale_date, total_amount, discounted)
 SELECT 
@@ -652,9 +676,14 @@ JOIN core.channels ch
 ON s.channel = ch.channel_name
 JOIN core.country co
 ON s.country = co.country_name;
+```
 
+<br>
 
--- 6. core.salesitems
+- Load salesitems
+<img height="250" alt="core salesitems" src="https://github.com/user-attachments/assets/9185864d-36fd-43dd-badf-5e7814176377" />
+
+```sql
 INSERT INTO core.salesitems 
 	(item_id, sale_id, product_id, quantity, original_price, unit_price, discount_applied)
 SELECT
@@ -666,9 +695,14 @@ SELECT
 	unit_price,
 	discount_applied
 FROM staging.salesitems;
+```
 
+<br>
 
--- 7. Load campaigns
+- Load campaigns
+<img height="250" alt="core campaigns" src="https://github.com/user-attachments/assets/31d3f7b2-a2a4-4ead-99ad-7f641ac8d86b" />
+
+```sql
 INSERT INTO core.campaigns
 	(campaign_id, campaign_name, start_date, end_date, channel_id, discount_type, discount_value)
 SELECT 
@@ -682,10 +716,14 @@ SELECT
 FROM staging.campaigns ca
 JOIN core.channels ch
 ON ca.channel = ch.channel_name;
+```
 
+<br>
 
+- Load stock
+<img height="250" alt="core stock" src="https://github.com/user-attachments/assets/3806e397-5bfd-44ad-b754-abeb489884a9" />
 
--- 8. Load stock
+```sql
 INSERT INTO core.stock (country_id, product_id, stock_quantity)
 SELECT 
 	c.country_id, 
@@ -698,19 +736,77 @@ ON s.country = c.country_name;
 
 <BR>
 
-- Verification
+#### 4. Verification
 
--- 1. Customers table
-SELECT COUNT(*) FROM staging.customers;
-SELECT COUNT(*) FROM core.customers;
-output: 1000 in both schemas
+Post-load validation confirmed full row-level consistency between the staging and core schemas for all primary transactional and master tables. Record counts for customers, sales, and sales items matched exactly, indicating successful data transfer with no unintended data loss or duplication during the ETL process.
 
--- 2. Sales table
-SELECT COUNT(*) FROM staging.sales;
-SELECT COUNT(*) FROM core.sales;
-output: 905 in both schemas
+<br>
+<br>
+<br>
 
--- 3. Salesitems
-SELECT COUNT(*) FROM staging.salesitems;
-SELECT COUNT(*) FROM core.salesitems;
-output: 2253 in both schemas
+## Phase 3: Indexing Strategy & Performance Validation
+
+#### Indexing Design Principles
+- All foreign keys indexed
+- High-usage date columns indexed
+- Avoided indexing low-cardinality and small tables
+
+<br>
+
+#### Index Implementation
+
+**1. Index Foreign Keys on Transaction Tables**
+-  sales table
+```sql
+CREATE INDEX idx_sales_customer_id
+ON core.sales (customer_id);
+
+CREATE INDEX idx_sales_channel_id
+ON core.sales (channel_id);
+
+CREATE INDEX idx_sales_country_id
+ON core.sales (country_id);
+```
+
+<br>
+
+- salesitems table
+```sql
+CREATE INDEX idx_salesitems_sale_id
+ON core.salesitems (sale_id);
+
+CREATE INDEX idx_salesitems_product_id
+ON core.salesitems (product_id);
+```
+
+<br>
+
+- stock table
+```sql
+CREATE INDEX idx_stock_product_id
+ON core.stock (product_id);
+```
+
+<br>
+<br>
+
+**2. Date Column Indexing** <br>
+sales.sale_date <br>
+```sql
+CREATE INDEX idx_sales_sale_date
+ON core.sales (sale_date);
+```
+
+<br>
+<br>
+
+**3. Index Usage Validation** <br>
+Confirm that PostgreSQL is actually using the created index 
+<img height="250" alt="validate index" src="https://github.com/user-attachments/assets/d8fa66b8-5542-44e8-a7b5-c8a757f4ab65" />
+
+```sql
+EXPLAIN ANALYZE
+SELECT *
+FROM core.sales
+WHERE sale_date = '2025-04-01';
+```
