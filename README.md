@@ -174,11 +174,34 @@ CREATE SCHEMA staging;
 <br>
 
 2. Loaded CSV files into a dedicated staging schema and verify upload
-```SQL
--- Verify upload
-SELECT * FROM staging.campaigns;
-SELECT * FROM staging.channels;
-SELECT * FROM staging.customers;
+- Verify upload <br>
+	- Staging campaigns table <br>
+<img height="250" alt="staging campaigns" src="https://github.com/user-attachments/assets/636be919-9c12-4d19-90e6-12442c553dcc" /> <br>
+
+		```SQL
+		SELECT * FROM staging.campaigns;
+		```
+
+	<br>
+	
+	- Staging channel table <br>
+<img height="250" alt="staging channels" src="https://github.com/user-attachments/assets/cb453baa-0519-4218-87af-11909bfaeee7" />
+
+		```sql
+		SELECT * FROM staging.channels;
+		```
+
+	<br>
+	
+	- Staging customers table <br>
+<img height="250" alt="staging customers" src="https://github.com/user-attachments/assets/8bd10481-deea-47a3-a0e5-0f2e1b27d86e" />
+
+		```sql
+		SELECT * FROM staging.customers;
+		```
+
+	<br>
+	
 SELECT * FROM staging.products;
 SELECT * FROM staging.sales;
 SELECT * FROM staging.salesitems;
@@ -332,7 +355,8 @@ SELECT * FROM staging.salesitems
 WHERE sale_date IS NULL;
 
 
--- B. Logical order checks (Confirmed campaign start-dates occur before end-dates and no sales were recorded before customer signup dates)
+-- B. Logical order checks
+-- (Confirmed campaign start-dates occur before end-dates and no sales were recorded before customer signup dates)
 SELECT * FROM staging.campaigns
 WHERE start_date > end_date;
 
@@ -352,9 +376,12 @@ WHERE s.sale_date < c.signup_date;
 - Referential Integrity: No orphan foreign keys found; all relationships were valid.
 - Numeric Validation: All price, quantity, revenue, and stock values were within valid ranges.
 - Date Integrity: No missing dates or invalid intra-table date sequences identified.
-- Cross-Table Date Issue: 73 sales records occurred before customer signup dates, indicating a potential customer lifecycle inconsistency (e.g., post-purchase registration or source data errors).
+- Cross-Table Date Issue: 73 sales records occurred before customer signup dates, indicating a potential customer lifecycle inconsistency.
 
 <br>
 
 **Resolution:** <br>
 No staging-level corrections were applied. The issue was documented and mitigated through enforced constraints and modeling decisions in the core schema.
+
+
+
