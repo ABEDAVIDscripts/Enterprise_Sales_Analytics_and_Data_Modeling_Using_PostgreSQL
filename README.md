@@ -4,11 +4,13 @@
 
 ### Project Overview 
 
-This project demonstrates an end-to-end SQL development and analytics workflow using PostgreSQL. Raw CSV datasets were ingested into a staging schema, validated using SQL-based data profiling techniques, transformed into a normalized core relational model, and exposed through analytical views to support business intelligence and decision-making.
+This project demonstrates an end-to-end SQL development and analytics workflow built in PostgreSQL using a fashion retail sales dataset. Raw CSV files were ingested into a staging schema, validated using SQL-based data profiling techniques, and transformed through SQL-based ETL processes into a fully normalized core relational model.
 
-<br>
+The solution emphasizes production-ready database design by enforcing data integrity through primary and foreign keys, constraints, and indexing strategies. A dedicated analytics schema was then created to enable business-friendly views, enabling efficient reporting, business intelligence, and data-driven decision-making.
 
-The project applies enterprise SQL best practices including schema design, data modeling, SQL-based ETL transformations, constraint enforcement, indexing strategies, and analytical querying.
+Overall, the project demonstrates how SQL alone can be used to design, validate, optimize, and analyze data in a manner consistent with real-world enterprise database and analytics workflows.
+
+
 
 
 <br>
@@ -24,20 +26,6 @@ The project applies enterprise SQL best practices including schema design, data 
 <br>
 <br>
 
-### Data Flow Architecture
-
-CSV Files  
-⬇️  
-**Staging Schema** *(Raw Ingestion)*  
-⬇️  
-**Core Schema** *(Normalized Relational Model)*  
-⬇️  
-**Analytics Schema** *(Business Views)*  
-⬇️  
-**Business Queries & Insights** <br>
-
-<br>
-<br>
 
 ### Schemas Description
 #### 1. Staging Schema
@@ -65,12 +53,31 @@ CSV Files
 - Designed to solve business questions and reporting
 - Simplifies complex joins
 
+
+<br>
+<br>
+
+### Data Flow Architecture
+
+CSV Files  
+⬇️  
+**Staging Schema** *(Raw Ingestion)*  
+⬇️  
+**Core Schema** *(Normalized Relational Model)*  
+⬇️  
+**Analytics Schema** *(Business Views)*  
+⬇️  
+**Business Queries & Insights** <br>
+
+
+
+
 <br>
 <br>
 <br>
 
 
-#### Implementation Approach
+#### Implementation Phases
 ## Phase 1: Data Profiling & Validation
 **Objective:** <br>
 Ensure source data quality before enforcing business rules.
@@ -78,7 +85,8 @@ Ensure source data quality before enforcing business rules.
 <br>
 
 **Key Activities:**
-1. Create staging schema and staging tables
+
+#### 1. Create staging schema and staging tables
 - Create staging schema
 ```sql
 CREATE SCHEMA staging;
@@ -173,17 +181,9 @@ CREATE SCHEMA staging;
 <br>
 <br>
 
-2. Loaded CSV files into a dedicated staging schema and verify upload
+#### 2. Loaded CSV files into a dedicated staging schema and verify upload
 - Verify upload <br>
-	- Staging campaigns table <br>
-<img height="250" alt="staging campaigns" src="https://github.com/user-attachments/assets/636be919-9c12-4d19-90e6-12442c553dcc" /> <br>
 
-		```SQL
-		SELECT * FROM staging.campaigns;
-		```
-
-	<br>
-	
 	- Staging channel table <br>
 <img height="250" alt="staging channels" src="https://github.com/user-attachments/assets/cb453baa-0519-4218-87af-11909bfaeee7" /> <br>
 
@@ -212,35 +212,13 @@ CREATE SCHEMA staging;
 
 	<br>
 
-	- Staging sales table <br>
-<img height="250" alt="staging sales" src="https://github.com/user-attachments/assets/c7526db0-20ec-4c6a-a79d-80693d91d873" /> <br>
+**All staging tables were verified for successful ingestion.**
 
-	
-		```sql
-		SELECT * FROM staging.sales;
-		```
-
-	<br>
-
-	- Staging salesitems table <br>
-<img height="250" alt="staging salesitems" src="https://github.com/user-attachments/assets/b21ae2f4-7a48-405e-8166-4b1bc2a6aff2" /> <br>
-
-		```sql
-		SELECT * FROM staging.salesitems;
-		```
-	<br>
-
-	- Staging stock table <br>
-<img height="250" alt="staging stock" src="https://github.com/user-attachments/assets/e6ab34ff-c58b-40e7-88f8-f720d2ecd1d8" /> <br>
-
-		```sql	
-		SELECT * FROM staging.stock;
-		```
 
 <Br>
 <br>
 
-3. Performed data profiling to identify:
+#### 3. Performed data profiling to identify:
 - Duplicate primary keys
 
 ```sql
@@ -439,6 +417,14 @@ The database was designed around clear structure, enforced rules, and explicit r
 <br>
 
 
+### ETL Implementation (SQL-Based)
+- Extract: Raw CSV data was ingested into staging tables to preserve source fidelity and enable validation.
+- Transform: Data was cleansed and reshaped during SQL-based inserts, including data type casting, deduplication, and mapping of textual attributes to surrogate keys.
+- Load: Transformed data was loaded into a normalized core schema with enforced foreign key relationships.
+- Validate: Post-load verification ensured record-level consistency between staging and core schemas.
+
+<br>
+
 ### Core Schema Data Modeling Principles
 - Normalized to Third Normal Form (3NF)
 - Textual attributes centralized to eliminate duplication
@@ -457,17 +443,10 @@ The following entities form the foundation of the core schema : *customers, coun
 <br>
 
 **Diagram** <br>
-<img height="400" alt="er diagram" src="https://github.com/user-attachments/assets/68c5d42f-baef-41d9-a505-877eb0209fed" />
+<img height="420" alt="er diagram" src="https://github.com/user-attachments/assets/68c5d42f-baef-41d9-a505-877eb0209fed" />
 
 
 <br>
-
-### ETL Implementation (SQL-Based)
-- Extract: Raw CSV data was ingested into staging tables to preserve source fidelity and enable validation.
-- Transform: Data was cleansed and reshaped during SQL-based inserts, including data type casting, deduplication, and mapping of textual attributes to surrogate keys.
-- Load: Transformed data was loaded into a normalized core schema with enforced foreign key relationships.
-- Validate: Post-load verification ensured record-level consistency between staging and core schemas.
-
 <br>
 
 ### Core Schema Implementation and Data Loading
@@ -746,16 +725,16 @@ Post-load validation confirmed full row-level consistency between the staging an
 
 ## Phase 3: Indexing Strategy & Performance Validation
 
-#### Indexing Design Principles
+### Indexing Design Principles
 - All foreign keys indexed
 - High-usage date columns indexed
 - Avoided indexing low-cardinality and small tables
 
 <br>
 
-#### Index Implementation
+### Index Implementation
 
-**1. Index Foreign Keys on Transaction Tables**
+#### 1. Index Foreign Keys on Transaction Tables
 -  sales table
 ```sql
 CREATE INDEX idx_sales_customer_id
@@ -790,7 +769,7 @@ ON core.stock (product_id);
 <br>
 <br>
 
-**2. Date Column Indexing** <br>
+#### 2. Date Column Indexing <br>
 sales.sale_date <br>
 ```sql
 CREATE INDEX idx_sales_sale_date
@@ -800,7 +779,7 @@ ON core.sales (sale_date);
 <br>
 <br>
 
-**3. Index Usage Validation** <br>
+#### 3. Index Usage Validation <br>
 Confirm that PostgreSQL is actually using the created index 
 
 ```sql
@@ -810,7 +789,8 @@ FROM core.sales
 WHERE sale_date = '2025-04-01';
 ```
 
-<img height="250" alt="validate index" src="https://github.com/user-attachments/assets/d8fa66b8-5542-44e8-a7b5-c8a757f4ab65" />
+<img height="250" alt="validate index" src="https://github.com/user-attachments/assets/d8fa66b8-5542-44e8-a7b5-c8a757f4ab65" /> <BR>
+
 > PostgreSQL correctly selected sequential scans for low-selectivity queries on small tables, and index scans for highly selective predicates, demonstrating proper cost-based optimization behavior.
 
 <br>
@@ -818,9 +798,9 @@ WHERE sale_date = '2025-04-01';
 <br>
 
 ## Phase 4: Analytical Views (Analytics Schema)
-Reusable business views were created to simplify reporting
+Reusable business views were created to simplify reporting <br>
 
-<br>
+
 
 #### 1. Create Analytics Schema
 ```sql
@@ -845,9 +825,6 @@ SELECT
 FROM core.sales s
 GROUP BY s.sale_date
 ORDER BY s.sale_date;
-
--- VERIFY
-SELECT * FROM analytics.revenue_per_day;
 ```
 
 <br>
@@ -866,9 +843,6 @@ JOIN core.sales s
 ON c.country_id = s.country_id
 GROUP BY c.country_name
 ORDER BY most_revenue desc;
-
--- VERIFY
-SELECT * FROM analytics.sales_by_country;
 ```
 
 <br>
@@ -886,9 +860,6 @@ FROM core.channels ch
 JOIN core.sales s
 ON ch.channel_id = s.channel_id
 GROUP BY ch.channel_name, ch.description;
-
--- VERIFY
-SELECT * FROM analytics.sales_by_channel;
 ```
 
 <br>
@@ -897,7 +868,7 @@ SELECT * FROM analytics.sales_by_channel;
 <img height="230" alt="4  What products generate the most money" src="https://github.com/user-attachments/assets/ad236dd6-5ca1-4ec9-9b94-52e2002e386b" />
 
 ```sql
-CREATE VIEW analytics.top_product AS
+CREATE VIEW analytics.product_performance AS
 SELECT 
 	p.product_name, 
 	SUM(si.quantity) AS total_quantity,
@@ -907,9 +878,6 @@ JOIN core.products p
 ON si.product_id = p.product_id
 GROUP BY p.product_name
 ORDER BY revenue desc;
-
--- VERIFY
-SELECT * FROM analytics.top_product;
 ```
 
 <br>
@@ -1098,7 +1066,7 @@ ORDER BY st.stock_quantity ASC;
 <br>
 <br>
 
-## Tools and Key Outcomes
+## Tools, Technologies & Key Outcomes
 
 ### Tools & Technologies
 - PostgreSQL
