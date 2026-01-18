@@ -410,7 +410,7 @@ The database was designed around clear structure, enforced rules, and explicit r
 <br>
 
 
-### ETL Implementation (SQL-Based)
+#### ETL Implementation (SQL-Based)
 - Extract: Raw CSV data was ingested into staging tables to preserve source fidelity and enable validation.
 - Transform: Data was cleansed and reshaped during SQL-based inserts, including data type casting, deduplication, and mapping of textual attributes to surrogate keys.
 - Load: Transformed data was loaded into a normalized core schema with enforced foreign key relationships.
@@ -418,7 +418,7 @@ The database was designed around clear structure, enforced rules, and explicit r
 
 <br>
 
-### Core Schema Data Modeling Principles
+#### Core Schema Data Modeling Principles
 - Normalized to Third Normal Form (3NF)
 - Textual attributes centralized to eliminate duplication
 - No calculated or aggregated values stored
@@ -429,7 +429,7 @@ The database was designed around clear structure, enforced rules, and explicit r
 <br>
 
 
-### Entity Relationship Diagram (ERD)
+#### Entity Relationship Diagram (ERD)
 An Entity Relationship Diagram (ERD) was created to validate and communicate the logical model. <br>
 The following entities form the foundation of the core schema : *customers, country, channels, products, sales, salesitems, campaigns, stock*. 
 
@@ -443,7 +443,7 @@ The following entities form the foundation of the core schema : *customers, coun
 <br>
 <br>
 
-### Core Schema Implementation and Data Loading
+## Phase 3: Core Schema Implementation and Data Loading
 
 #### 1. Create core shema
 ```sql
@@ -717,7 +717,7 @@ Post-load validation confirmed full row-level consistency between the staging an
 <br>
 <br>
 
-## Phase 3: Indexing Strategy & Performance Validation
+## Phase 4: Indexing Strategy & Performance Validation
 
 ### Indexing Design Principles
 - All foreign keys indexed
@@ -791,7 +791,7 @@ WHERE sale_date = '2025-04-01';
 <br>
 <br>
 
-## Phase 4: Analytical Views (Analytics Schema)
+## Phase 5: Analytical Views (Analytics Schema)
 Reusable business views were created to simplify reporting <br>
 
 
@@ -921,7 +921,7 @@ SELECT * FROM analytics.discount_analysis;
 <br>
 
 
-## Business Insights & Decision-Oriented Analysis
+## Phase 6: Business Insights & Decision-Oriented Analysis
 Using analytical views and core tables, the following 9 real business questions were answered:
 
 <br>
