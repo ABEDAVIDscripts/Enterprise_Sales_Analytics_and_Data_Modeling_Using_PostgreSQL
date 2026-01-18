@@ -52,17 +52,7 @@ Overall, the project demonstrates how SQL alone can be used to design, validate,
 
 ### Data Flow Architecture
 
-CSV Files  
-⬇️  
-**Staging Schema** *(Raw Ingestion)*  
-⬇️  
-**Core Schema** *(Normalized Relational Model)*  
-⬇️  
-**Analytics Schema** *(Business Views)*  
-⬇️  
-**Business Queries & Insights** <br>
-
-
+<img width="673" height="400" alt="data flow" src="https://github.com/user-attachments/assets/1f7ad4a8-0271-435f-8e0b-467a7bd24cd5" />
 
 
 <br>
