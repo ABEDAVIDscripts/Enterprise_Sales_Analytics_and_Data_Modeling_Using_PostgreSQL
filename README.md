@@ -30,6 +30,7 @@ Overall, the project demonstrates how SQL alone can be used to design, validate,
 ### Schemas Description
 #### 1. Staging Schema
 - Raw ingestion of CSV files
+- Tables include: customers, sales, salesitems, products, stock, campaigns & channels 
 - No transformations
 - Used for data profiling and validation
 
@@ -38,15 +39,7 @@ Overall, the project demonstrates how SQL alone can be used to design, validate,
 - Fully normalized relational model
 - Primary & foreign keys enforced
 - Business rules applied via constraints
-- Tables include:
-  * customers
-  * sales
-  * salesitems
-  * products
-  * stock
-  * campaigns
-  * channels
-  * country
+- Tables include: customers, sales, salesitems, products, stock, campaigns, channels & country
 
 #### 3. Analytics Schema
 - Read-only analytical views
@@ -181,7 +174,7 @@ CREATE SCHEMA staging;
 <br>
 <br>
 
-#### 2. Loaded CSV files into a dedicated staging schema and verify upload
+#### 2. Loaded CSV files into a dedicated staging schema using PostgreSQL’s native import functionality and verify upload
 - Verify upload <br>
 
 	- Staging channel table <br>
@@ -212,7 +205,7 @@ CREATE SCHEMA staging;
 
 	<br>
 
-**All staging tables were verified for successful ingestion.**
+> **All staging tables were verified for successful ingestion.**
 
 
 <Br>
@@ -443,7 +436,8 @@ The following entities form the foundation of the core schema : *customers, coun
 <br>
 
 **Diagram** <br>
-<img height="420" alt="er diagram" src="https://github.com/user-attachments/assets/68c5d42f-baef-41d9-a505-877eb0209fed" />
+<img height="450" alt="er diagram" src="https://github.com/user-attachments/assets/68c5d42f-baef-41d9-a505-877eb0209fed" />
+
 
 
 <br>
