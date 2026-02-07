@@ -4,7 +4,7 @@
 
 ### Project Overview 
 
-This production case study demonstrates an end-to-end SQL development and analytics workflow built in PostgreSQL using a fashion retail sales dataset. Raw CSV files were ingested into a staging schema, validated using SQL-based data profiling techniques, and transformed through SQL-based ETL processes into a fully normalized core relational model.
+This production case study demonstrates an end-to-end SQL development and analytics workflow built in PostgreSQL using a fashion sales dataset. Raw CSV files were ingested into a staging schema, validated using SQL-based data profiling techniques, and transformed through SQL-based ETL processes into a fully normalized core relational model.
 
 The solution emphasizes production-ready database design by enforcing data integrity through primary and foreign keys, constraints, and indexing strategies. A dedicated analytics schema was then created to enable business-friendly views, enabling efficient reporting, business intelligence, and data-driven decision-making.
 
